@@ -6,7 +6,7 @@ interface Price {
 }
 
 interface ExpenseItem {
-  id: number;
+  id?: number;
   title: string;
   cost: Price;
 }
@@ -83,7 +83,11 @@ class Expenses implements IExpenses {
     return `${this.finalCurrency} $${total.toFixed(2).toString()}`;
   }
   remove(id: number): boolean {
-    throw new Error("Method not implemented.");
+    const items = this.getItems().filter((item) => {
+      return item.id != id;
+    });
+    this.expenses.createFrom(items);
+    return true;
   }
 
   private convertCurrency(item: ExpenseItem, currency: Currency) {
@@ -91,7 +95,7 @@ class Expenses implements IExpenses {
       case "USD":
         switch (currency) {
           case "SEK":
-            return item.cost.number * 10;
+            return item.cost.number * 8.72;
             break;
           default:
             return item.cost.number;
@@ -100,7 +104,7 @@ class Expenses implements IExpenses {
       case "SEK":
         switch (currency) {
           case "USD":
-            return item.cost.number / 10;
+            return item.cost.number / 8.72;
             break;
           default:
             return item.cost.number;

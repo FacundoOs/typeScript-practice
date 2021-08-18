@@ -56,14 +56,18 @@ var Expenses = /** @class */ (function () {
         return this.finalCurrency + " $" + total.toFixed(2).toString();
     };
     Expenses.prototype.remove = function (id) {
-        throw new Error("Method not implemented.");
+        var items = this.getItems().filter(function (item) {
+            return item.id != id;
+        });
+        this.expenses.createFrom(items);
+        return true;
     };
     Expenses.prototype.convertCurrency = function (item, currency) {
         switch (item.cost.currency) {
             case "USD":
                 switch (currency) {
                     case "SEK":
-                        return item.cost.number * 10;
+                        return item.cost.number * 8.72;
                         break;
                     default:
                         return item.cost.number;
@@ -72,7 +76,7 @@ var Expenses = /** @class */ (function () {
             case "SEK":
                 switch (currency) {
                     case "USD":
-                        return item.cost.number / 10;
+                        return item.cost.number / 8.72;
                         break;
                     default:
                         return item.cost.number;
